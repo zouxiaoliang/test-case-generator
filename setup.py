@@ -10,11 +10,11 @@ setup(
     author_email='295919168@qq.com',
     description='generator cppunit test case class',
     install_requires=[
-        "jinja2"
+        "jinja2>=2.10"
     ],
     entry_points={
         'console_scripts': [
-            'cppunit-generator = generator:_main',
+            'cppunit-generator = cppunit.generator:_main',
         ]
     }
 )
