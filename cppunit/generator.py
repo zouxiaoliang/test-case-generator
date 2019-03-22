@@ -7,15 +7,15 @@ from jinja2.nativetypes import NativeEnvironment, Template
 __author__ = "zouxiaoliang"
 
 TEST_CASE_H_FILE = """
-#ifndef {{class_name.upper()}}_TEST_H
-#define {{class_name.upper()}}_TEST_H
+#ifndef {{class_name.upper()}}_TEST_CASE_H
+#define {{class_name.upper()}}_TEST_CASE_H
 
 #include <cppunit/extensions/HelperMacros.h>
 
 class {{class_name}}_TestCase : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE( {{class_name}}_TestCase );
-    CPPUNIT_TEST(helloworld_test);
+    CPPUNIT_TEST( test_helloworld );
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -26,12 +26,13 @@ protected:
     void test_helloworld();
 };
 
-#endif // {{class_name.upper()}}_TEST_H
+#endif // {{class_name.upper()}}_TEST_CASE_H
 
 """
 
 TEST_CASE_CPP_FILE = """
 #include <cppunit/config/SourcePrefix.h>
+#include "{{class_name}}_TestCase.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( {{class_name}}_TestCase );
 
@@ -71,13 +72,13 @@ def _main():
     h_render = env.from_string(TEST_CASE_H_FILE)  # type: Template
     cpp_render = env.from_string(TEST_CASE_CPP_FILE)  # type: Template
 
-    test_h_file = os.path.join(test_class_path, "{}.h".format(class_name))
+    test_h_file = os.path.join(test_class_path, "{}_TestCase.h".format(class_name))
     with open(test_h_file, mode="wb") as writer:
         writer.write(h_render.render(class_name=class_name).strip())
         writer.write("\n")
     pass
 
-    test_cpp_file = os.path.join(test_class_path, "{}.cpp".format(class_name))
+    test_cpp_file = os.path.join(test_class_path, "{}_TestCase.cpp".format(class_name))
     with open(test_cpp_file, mode="wb") as writer:
         writer.write(cpp_render.render(class_name=class_name).strip())
         writer.write("\n")
